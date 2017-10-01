@@ -2,12 +2,13 @@ FROM php:7.1-fpm
 
 # updates
 RUN apt-get update && apt-get install -y \
-			libmcrypt-dev \
-			libxml2-dev \
-			libssl-dev \
-			libpq-dev \
-			libbz2-dev \
-			libpng-dev
+            git \
+            libmcrypt-dev \
+            libxml2-dev \
+            libssl-dev \
+            libpq-dev \
+            libbz2-dev \
+            libpng-dev
 
 # extensions
 RUN docker-php-ext-install opcache && \
@@ -35,6 +36,18 @@ RUN if [ ${XDEBUG_ON} = true ]; then \
     echo "xdebug.profiler_enable = 0" >> /usr/local/etc/php/conf.d/docker-php-ext-xdebug.ini && \
     echo "xdebug.remote_host = ${XDEBUG_REMOTE_HOST}" >> /usr/local/etc/php/conf.d/docker-php-ext-xdebug.ini && \
     echo "xdebug.remote_port = 9000" >> /usr/local/etc/php/conf.d/docker-php-ext-xdebug.ini \
+;fi
+
+# Install Tideways
+RUN if [ ${XHPROF} = true ]; then \
+    git clone https://github.com/tideways/php-profiler-extension.git && \
+    cd php-profiler-extension && \
+    phpize7.1 && \
+    ./configure && \
+    make && \
+    make install && \
+    echo "extension=tideways.so" >> /usr/local/etc/php/php.ini && \
+    echo "tideways.auto_prepend_library=0" >> /usr/local/etc/php/php.ini \
 ;fi
 
 # mark volume/s as externally mounted

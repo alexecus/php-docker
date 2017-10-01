@@ -4,35 +4,10 @@ services:
   workspace:
     image: busybox:latest
     volumes:
-      - ${APPLICATION}:/var/www
-      - ./mariadb:/var/lib/mysql:rw
-      - ./services/nginx/logs:/var/log/nginx
+      - ${MOUNT}:/var/www
+      - ./mount/mariadb:/var/lib/mysql:rw
+      - ./mount/nginx/logs:/var/log/nginx
       - ./services/nginx/sites:/etc/nginx/conf.d
-
-  php-fpm:
-    build:
-      context: ./services/php
-      args:
-        - "XDEBUG_ON=${XDEBUG_ON}"
-        - "XDEBUG_REMOTE_HOST=${XDEBUG_REMOTE_HOST}"
-    ports:
-      - 9000
-    volumes_from:
-      - workspace
-    restart: always
-    extra_hosts:
-       - "logic.dev:10.5.0.5"
-       - "logic.local:10.5.0.5"
-       - "entry.drupal.dev:10.5.0.5"
-    networks:
-      vpcbr:
-        ipv4_address: 10.5.0.4
-
-  composer:
-    build:
-      context: ./services/composer
-    volumes:
-      - ./:/app
 
   nginx:
     build:
@@ -45,8 +20,23 @@ services:
       - php-fpm
     restart: always
     networks:
-      vpcbr:
+      backend:
         ipv4_address: 10.5.0.5
+
+  php-fpm:
+    build:
+      context: ./services/php
+      args:
+        - "XDEBUG_ON=${XDEBUG_ON}"
+        - "XDEBUG_REMOTE_HOST=${XDEBUG_REMOTE_HOST}"
+    ports:
+      - 9000
+    volumes_from:
+      - workspace
+    restart: always
+    networks:
+      backend:
+        ipv4_address: 10.5.0.6
 
   mariadb:
     build:
@@ -61,8 +51,8 @@ services:
       - "MYSQL_PASSWORD=secret"
       - "MYSQL_ROOT_PASSWORD=secret"
     networks:
-      vpcbr:
-        ipv4_address: 10.5.0.6
+      backend:
+        ipv4_address: 10.5.0.7
 
   node:
     build:
@@ -79,7 +69,7 @@ volumes:
     driver: "local"
 
 networks:
-  vpcbr:
+  backend:
     driver: bridge
     ipam:
      config:
