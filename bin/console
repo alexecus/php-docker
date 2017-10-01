@@ -1,0 +1,42 @@
+#!/bin/bash
+
+# Toolbox
+# Available commands:
+#
+# console start
+#   Starts the docker instance
+# console stop
+#   Stops the docker instance
+# console reload
+#   Reloads docker
+# console reload <module>
+#   Recreates specified module
+
+if [ -z "$1" ]; then
+    echo "No argument supplied"
+    exit 1
+fi
+
+cmd=$1
+
+if [ $cmd == "start" ]; then
+    echo "Starting Docker Instance"
+    docker-compose up -d --build --remove-orphans
+
+elif [ $cmd == "stop" ]; then
+    echo "Stopping Docker Instance"
+    docker-compose stop
+
+elif [ $cmd == "reload" ]; then
+    if [ -z "$2" ]; then
+        echo "Reloading Docker Instance"
+        docker-compose up -d --build --remove-orphans
+    else
+        component=$2
+
+        echo "Reloading Specified Component"
+        docker-compose build --no-cache --force-rm $component
+    fi
+else
+    echo "Invalid command"
+fi
