@@ -1,6 +1,6 @@
 server {
   server_name alexecus.dev;
-  root        /var/www/Webpress/Alexecus/web;
+  root        /var/www/Webpress/Alexecus/public;
   index       index.php;
 
   location / {

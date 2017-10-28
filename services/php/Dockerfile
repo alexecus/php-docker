@@ -39,16 +39,16 @@ RUN if [ ${XDEBUG_ON} = true ]; then \
 ;fi
 
 # Install Tideways
-RUN if [ ${XHPROF} = true ]; then \
-    git clone https://github.com/tideways/php-profiler-extension.git && \
-    cd php-profiler-extension && \
-    phpize7.1 && \
-    ./configure && \
-    make && \
-    make install && \
-    echo "extension=tideways.so" >> /usr/local/etc/php/php.ini && \
-    echo "tideways.auto_prepend_library=0" >> /usr/local/etc/php/php.ini \
-;fi
+# RUN if [ ${XHPROF} = true ]; then \
+#     git clone https://github.com/tideways/php-profiler-extension.git && \
+#     cd php-profiler-extension && \
+#     phpize7.1 && \
+#     ./configure && \
+#     make && \
+#     make install && \
+#     echo "extension=tideways.so" >> /usr/local/etc/php/php.ini && \
+#     echo "tideways.auto_prepend_library=0" >> /usr/local/etc/php/php.ini \
+# ;fi
 
 # mark volume/s as externally mounted
 VOLUME ["/var/www"]

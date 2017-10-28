@@ -37,6 +37,18 @@ elif [ $cmd == "reload" ]; then
         echo "Reloading Specified Component"
         docker-compose build --no-cache --force-rm $component
     fi
+
+elif [ $cmd == "restart" ]; then
+    if [ -z "$2" ]; then
+        echo "Restarting Docker Instance"
+        docker-compose restart
+    else
+        component=$2
+
+        echo "Restarting Specified Component"
+        docker-compose restart $component
+    fi
+
 else
     echo "Invalid command"
 fi
