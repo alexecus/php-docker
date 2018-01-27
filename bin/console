@@ -7,9 +7,9 @@
 #   Starts the docker instance
 # console stop
 #   Stops the docker instance
-# console reload
+# console restart
 #   Reloads docker
-# console reload <module>
+# console recreate <module>
 #   Recreates specified module
 
 if [ -z "$1" ]; then
@@ -27,27 +27,19 @@ elif [ $cmd == "stop" ]; then
     echo "Stopping Docker Instance"
     docker-compose stop
 
-elif [ $cmd == "reload" ]; then
+elif [ $cmd == "recreate" ]; then
     if [ -z "$2" ]; then
-        echo "Reloading Docker Instance"
-        docker-compose up -d --build --remove-orphans
+        echo "Missing component argument. Please specify which container you want to recreate"
     else
         component=$2
 
-        echo "Reloading Specified Component"
+        echo "Recreating Docker Instance"
         docker-compose build --no-cache --force-rm $component
     fi
 
 elif [ $cmd == "restart" ]; then
-    if [ -z "$2" ]; then
-        echo "Restarting Docker Instance"
-        docker-compose restart
-    else
-        component=$2
-
-        echo "Restarting Specified Component"
-        docker-compose restart $component
-    fi
+    echo "Restarting Docker"
+    docker-compose restart
 
 else
     echo "Invalid command"
