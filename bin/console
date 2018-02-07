@@ -1,0 +1,46 @@
+#!/bin/bash
+
+# Toolbox
+# Available commands:
+#
+# console start
+#   Starts the docker instance
+# console stop
+#   Stops the docker instance
+# console restart
+#   Reloads docker
+# console recreate <module>
+#   Recreates specified module
+
+if [ -z "$1" ]; then
+    echo "No argument supplied"
+    exit 1
+fi
+
+cmd=$1
+
+if [ $cmd == "start" ]; then
+    echo "Starting Docker Instance"
+    docker-compose up -d --build --remove-orphans
+
+elif [ $cmd == "stop" ]; then
+    echo "Stopping Docker Instance"
+    docker-compose stop
+
+elif [ $cmd == "recreate" ]; then
+    if [ -z "$2" ]; then
+        echo "Missing component argument. Please specify which container you want to recreate"
+    else
+        component=$2
+
+        echo "Recreating Docker Instance"
+        docker-compose build --no-cache --force-rm $component
+    fi
+
+elif [ $cmd == "restart" ]; then
+    echo "Restarting Docker"
+    docker-compose restart
+
+else
+    echo "Invalid command"
+fi
