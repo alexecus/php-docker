@@ -1,4 +1,4 @@
-FROM node:7.10
+FROM node:8
 
 # mark volume/s as externally mounted
 VOLUME ["/var/www"]
