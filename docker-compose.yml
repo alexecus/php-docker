@@ -5,9 +5,12 @@ services:
     image: busybox:latest
     volumes:
       - ${MOUNT}:/var/www
+      - ./services/nginx/nginx.conf:/etc/nginx/nginx.conf
+      - ./services/nginx/sites:/etc/nginx/conf.d
+      - ./services/php/php.ini:/usr/local/etc/php/php.ini
+      - ./services/mariadb/my.cnf:/etc/mysql/conf.d/my.cnf
       - ./mount/mariadb:/var/lib/mysql:rw
       - ./mount/nginx/logs:/var/log/nginx
-      - ./services/nginx/sites:/etc/nginx/conf.d
 
   nginx:
     build:
@@ -59,6 +62,13 @@ services:
       context: ./services/node
     volumes_from:
       - workspace
+    environment:
+      - NODE_ENV=production
+    ports:
+      - 8081:8081
+    networks:
+      backend:
+        ipv4_address: 10.5.0.8
 
 volumes:
   php-fpm:

@@ -1,14 +1,13 @@
-FROM php:7.1-fpm
+FROM php:7.2.11-fpm
 
 # updates
 RUN apt-get update && apt-get install -y \
-            git \
-            libmcrypt-dev \
-            libxml2-dev \
-            libssl-dev \
-            libpq-dev \
-            libbz2-dev \
-            libpng-dev
+    git \
+    libxml2-dev \
+    libssl-dev \
+    libpq-dev \
+    libbz2-dev \
+    libpng-dev
 
 # extensions
 RUN docker-php-ext-install opcache && \
@@ -19,7 +18,6 @@ RUN docker-php-ext-install opcache && \
     docker-php-ext-install dom && \
     docker-php-ext-install gd && \
     docker-php-ext-install mbstring && \
-    docker-php-ext-install mcrypt && \
     docker-php-ext-install mysqli && \
     docker-php-ext-install pdo pdo_mysql
 
@@ -39,16 +37,16 @@ RUN if [ ${XDEBUG_ON} = true ]; then \
 ;fi
 
 # Install Tideways
-# RUN if [ ${XHPROF} = true ]; then \
-#     git clone https://github.com/tideways/php-profiler-extension.git && \
-#     cd php-profiler-extension && \
-#     phpize7.1 && \
-#     ./configure && \
-#     make && \
-#     make install && \
-#     echo "extension=tideways.so" >> /usr/local/etc/php/php.ini && \
-#     echo "tideways.auto_prepend_library=0" >> /usr/local/etc/php/php.ini \
-# ;fi
+RUN if [ ${XHPROF} = true ]; then \
+    git clone https://github.com/tideways/php-profiler-extension.git && \
+    cd php-profiler-extension && \
+    phpize7.2 && \
+    ./configure && \
+    make && \
+    make install && \
+    echo "extension=tideways.so" >> /usr/local/etc/php/php.ini && \
+    echo "tideways.auto_prepend_library=0" >> /usr/local/etc/php/php.ini \
+;fi
 
 # mark volume/s as externally mounted
 VOLUME ["/var/www"]

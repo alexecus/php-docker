@@ -1,10 +1,4 @@
-FROM nginx:1.13
-
-# update image
-RUN apt-get update
-
-# nginx configuration
-COPY nginx.conf /etc/nginx
+FROM nginx:1.15
 
 # mark volume/s as externally mounted
 VOLUME ["/var/www", "/etc/nginx/conf.d", "/var/log/nginx"]
