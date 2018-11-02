@@ -10,7 +10,7 @@ a module to serve your PHP applications.
 
 **What's Inside**
 
-- PHP 7.1
-- Nginx
-- MariaDB
-- NodeJS
+- PHP 7.2.11
+- Nginx 1.15
+- MariaDB 10.3
+- NodeJS 8
